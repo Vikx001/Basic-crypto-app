@@ -1,5 +1,4 @@
 
-
 ```markdown
 # Basic Crypto Dashboard
 
@@ -20,8 +19,7 @@ A simple cryptocurrency dashboard application built with React and Node.js, prov
 
 ## Project Structure
 
-```
-
+```plaintext
 crypto-project/
 ├── api/
 │   ├── crypto/
@@ -39,7 +37,6 @@ crypto-project/
 ├── package-lock.json
 ├── package.json
 └── README.md
-
 ```
 
 ## Getting Started
