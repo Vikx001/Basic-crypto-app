@@ -10,8 +10,7 @@ app.use(cors());
 let cache = null;
 let cacheTimestamp = 0;
 let rateLimitExceeded = false;
-const CACHE_DURATION = 60000; // Cache duration in milliseconds (60 seconds)
-
+const CACHE_DURATION = 60000; 
 app.get('/api/crypto', async (req, res) => {
   const now = Date.now();
 
