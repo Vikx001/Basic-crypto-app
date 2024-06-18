@@ -1,28 +1,22 @@
 {
-  "name": "frontend",
+  "name": "crypto-dashboard",
   "version": "1.0.0",
-  "private": true,
-  "dependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
-    "axios": "^0.21.1",
-    "chart.js": "^3.2.1",
-    "chartjs-chart-financial": "^0.1.0",
-    "chartjs-adapter-date-fns": "^2.0.0"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "chart.js": "^3.5.0",
+    "chartjs-chart-financial": "^0.1.0",
+    "axios": "^0.21.1",
+    "react-chartjs-2": "^3.0.4"
   },
+  "proxy": "http://localhost:5000",
   "browserslist": {
     "production": [
       ">0.2%",
