@@ -1,0 +1,52 @@
+
+.Sidebar {
+    position: fixed;
+    left: -200px;
+    top: 0;
+    height: 100%;
+    width: 200px;
+    background-color: #f0f0f0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+    transition: left 0.3s;
+    z-index: 1000;
+  }
+  
+  .Sidebar.open {
+    left: 0;
+  }
+  
+  .Sidebar .toggle-btn {
+    position: absolute;
+    top: 20px;
+    right: -20px;
+    width: 20px;
+    height: 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  .Sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 40px;
+  }
+  
+  .Sidebar li {
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .Sidebar li:hover {
+    background-color: #e0e0e0;
+  }
+  

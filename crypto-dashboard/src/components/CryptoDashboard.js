@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Chart, registerables } from 'chart.js';
 import { CandlestickController, CandlestickElement } from 'chartjs-chart-financial';
 import 'chartjs-adapter-date-fns';
+import Sidebar from './Sidebar';
 import './CryptoDashboard.css';
 
 Chart.register(...registerables, CandlestickController, CandlestickElement);
@@ -14,6 +15,7 @@ const CryptoDashboard = () => {
   const [error, setError] = useState(null);
   const [selectedCoin, setSelectedCoin] = useState(null);
   const [chartType, setChartType] = useState('line');
+  const [selectedOption, setSelectedOption] = useState(null);
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
@@ -317,54 +319,79 @@ const CryptoDashboard = () => {
     setChartType(e.target.value);
   };
 
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
+  };
+
   return (
     <div className="CryptoDashboard">
-      <h1>Crypto Dashboard</h1>
-      {error ? <p className="error">{error}</p> : null}
-      <div className="chart-type-selector">
-        <label htmlFor="chartType">Select Chart Type:</label>
-        <select id="chartType" value={chartType} onChange={handleChartTypeChange}>
-          <option value="line">Line Chart</option>
-          <option value="bar">Bar Chart</option>
-          <option value="candlestick">Candlestick Chart</option>
-        </select>
-      </div>
-      <div className="chart-container">
-        <canvas ref={chartRef} id="cryptoChart"></canvas>
-      </div>
-      <div className="crypto-icons">
-        {cryptoData.map((coin) => (
-          <div key={coin.id} className="crypto-icon" onClick={() => handleCoinClick(coin)}>
-            <img src={coin.image} alt={coin.name} className="crypto-image" />
-            <p>{coin.symbol.toUpperCase()}</p>
-          </div>
-        ))}
-      </div>
-      {selectedCoin && (
-        <div className="crypto-details">
-          <div key={selectedCoin.id} className="crypto-card">
-            <img src={selectedCoin.image} alt={selectedCoin.name} className="crypto-image" />
-            <h2>{selectedCoin.name} ({selectedCoin.symbol.toUpperCase()})</h2>
-            <p>Current Price: ${selectedCoin.current_price.toLocaleString()}</p>
-            <p>Market Cap: ${selectedCoin.market_cap.toLocaleString()}</p>
-            <p>Total Volume: ${selectedCoin.total_volume.toLocaleString()}</p>
-            <p>High 24h: ${selectedCoin.high_24h.toLocaleString()}</p>
-            <p>Low 24h: ${selectedCoin.low_24h.toLocaleString()}</p>
-            <p>Price Change 24h: ${selectedCoin.price_change_24h.toLocaleString()}</p>
-            <p>Price Change % 24h: {selectedCoin.price_change_percentage_24h.toFixed(2)}%</p>
-          </div>
-          <div className="comparison-window">
-            <h3>Comparison</h3>
-            {cryptoData
-              .filter((coin) => coin.id !== selectedCoin.id)
-              .map((coin) => (
-                <div key={coin.id} className="comparison-item">
-                  <p>{coin.name}: ${coin.current_price.toLocaleString()}</p>
-                </div>
-              ))}
-          </div>
+      <Sidebar onSelect={handleOptionSelect} />
+      <div className="main-content">
+        <h1>Crypto Dashboard</h1>
+        {error ? <p className="error">{error}</p> : null}
+        <div className="chart-type-selector">
+          <label htmlFor="chartType">Select Chart Type:</label>
+          <select id="chartType" value={chartType} onChange={handleChartTypeChange}>
+            <option value="line">Line Chart</option>
+            <option value="bar">Bar Chart</option>
+            <option value="candlestick">Candlestick Chart</option>
+          </select>
         </div>
-      )}
+        <div className="chart-container">
+          <canvas ref={chartRef} id="cryptoChart"></canvas>
+        </div>
+        <div className="crypto-icons">
+          {cryptoData.map((coin) => (
+            <div key={coin.id} className="crypto-icon" onClick={() => handleCoinClick(coin)}>
+              <img src={coin.image} alt={coin.name} className="crypto-image" />
+              <p>{coin.symbol.toUpperCase()}</p>
+            </div>
+          ))}
+        </div>
+        {selectedCoin && (
+          <div className="crypto-details">
+            <div key={selectedCoin.id} className="crypto-card">
+              <img src={selectedCoin.image} alt={selectedCoin.name} className="crypto-image" />
+              <h2>{selectedCoin.name} ({selectedCoin.symbol.toUpperCase()})</h2>
+              <p>Current Price: ${selectedCoin.current_price.toLocaleString()}</p>
+              <p>Market Cap: ${selectedCoin.market_cap.toLocaleString()}</p>
+              <p>Total Volume: ${selectedCoin.total_volume.toLocaleString()}</p>
+              <p>High 24h: ${selectedCoin.high_24h.toLocaleString()}</p>
+              <p>Low 24h: ${selectedCoin.low_24h.toLocaleString()}</p>
+              <p>Price Change 24h: ${selectedCoin.price_change_24h.toLocaleString()}</p>
+              <p>Price Change % 24h: {selectedCoin.price_change_percentage_24h.toFixed(2)}%</p>
+            </div>
+            <div className="comparison-window">
+              <h3>Comparison</h3>
+              {cryptoData
+                .filter((coin) => coin.id !== selectedCoin.id)
+                .map((coin) => (
+                  <div key={coin.id} className="comparison-item">
+                    <p>{coin.name}: ${coin.current_price.toLocaleString()}</p>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+        {selectedOption === 'analyze' && (
+          <div className="analyze-section">
+            <h2>Analyze the Coins</h2>
+            
+          </div>
+        )}
+        {selectedOption === 'history' && (
+          <div className="history-section">
+            <h2>History of the Coins</h2>
+            
+          </div>
+        )}
+        {selectedOption === 'resources' && (
+          <div className="resources-section">
+            <h2>Best Resources to Read</h2>
+            
+          </div>
+        )}
+      </div>
     </div>
   );
 };
