@@ -49,7 +49,7 @@ app.get('/api/crypto', async (req, res) => {
         rateLimitExceeded = true;
         setTimeout(() => {
           rateLimitExceeded = false;
-        }, 60000); // Retry after 60 seconds
+        }, 60000); 
       }
     }
     res.status(500).send('Server Error');

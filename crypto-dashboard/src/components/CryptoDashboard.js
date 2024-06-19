@@ -1,10 +1,8 @@
-
-
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Chart, registerables } from 'chart.js';
 import { CandlestickController, CandlestickElement } from 'chartjs-chart-financial';
-import 'chartjs-adapter-date-fns'; // Import the date adapter for Chart.js
+import 'chartjs-adapter-date-fns';
 import './CryptoDashboard.css';
 
 Chart.register(...registerables, CandlestickController, CandlestickElement);
@@ -52,26 +50,93 @@ const CryptoDashboard = () => {
               label: 'Cryptocurrency Prices',
               data: data,
               borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
-              fill: false,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+              pointBorderColor: '#fff',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: 'rgba(75, 192, 192, 1)',
             },
           ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          animation: {
+            duration: 1000,
+            easing: 'easeInOutQuad',
+          },
           plugins: {
             legend: {
-              display: false,
+              display: true,
+              position: 'top',
+              labels: {
+                color: '#333',
+                font: {
+                  size: 14,
+                },
+              },
+            },
+            title: {
+              display: true,
+              text: 'Cryptocurrency Market Prices',
+              color: '#333',
+              font: {
+                size: 20,
+              },
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              titleFont: { size: 16 },
+              bodyFont: { size: 14 },
+              callbacks: {
+                label: function (context) {
+                  return `$${context.raw.toLocaleString()}`;
+                },
+              },
             },
           },
           scales: {
+            x: {
+              type: 'category',
+              title: {
+                display: true,
+                text: 'Cryptocurrency',
+                color: '#333',
+                font: {
+                  size: 16,
+                },
+              },
+              grid: {
+                display: false,
+              },
+              ticks: {
+                color: '#333',
+              },
+            },
             y: {
-              beginAtZero: true,
-            }
+              type: chartType === 'bar' ? 'logarithmic' : 'linear',
+              beginAtZero: false,
+              title: {
+                display: true,
+                text: 'Price (USD)',
+                color: '#333',
+                font: {
+                  size: 16,
+                },
+              },
+              grid: {
+                color: 'rgba(200, 200, 200, 0.3)',
+              },
+              ticks: {
+                color: '#333',
+                callback: function (value) {
+                  return `$${value}`;
+                },
+              },
             },
           },
-        };
+        },
+      };
 
       if (chartType === 'candlestick') {
         chartConfig.type = 'candlestick';
@@ -93,9 +158,37 @@ const CryptoDashboard = () => {
             time: {
               unit: 'day',
             },
+            title: {
+              display: true,
+              text: 'Date',
+              color: '#333',
+              font: {
+                size: 16,
+              },
+            },
+            grid: {
+              display: false,
+            },
+            ticks: {
+              color: '#333',
+            },
           },
           y: {
             beginAtZero: false,
+            title: {
+              display: true,
+              text: 'Price (USD)',
+              color: '#333',
+              font: {
+                size: 16,
+              },
+            },
+            grid: {
+              color: 'rgba(200, 200, 200, 0.3)',
+            },
+            ticks: {
+              color: '#333',
+            },
           },
         };
       }
@@ -107,10 +200,117 @@ const CryptoDashboard = () => {
       const ctx = chartRef.current.getContext('2d');
       chartInstanceRef.current = new Chart(ctx, chartConfig);
     }
-  }, [data, labels, chartType]);
+  }, [data, labels, chartType, cryptoData]);
 
   const handleCoinClick = (coin) => {
     setSelectedCoin(coin === selectedCoin ? null : coin);
+    if (coin !== selectedCoin) {
+      const filteredData = [coin.current_price];
+      const filteredLabels = [coin.name];
+      const chartConfig = {
+        type: chartType === 'candlestick' ? 'candlestick' : 'line',
+        data: {
+          labels: filteredLabels,
+          datasets: [
+            {
+              label: `${coin.name} Price`,
+              data: filteredData,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+              pointBorderColor: '#fff',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: 'rgba(75, 192, 192, 1)',
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: 1000,
+            easing: 'easeInOutQuad',
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                color: '#333',
+                font: {
+                  size: 14,
+                },
+              },
+            },
+            title: {
+              display: true,
+              text: `${coin.name} Price`,
+              color: '#333',
+              font: {
+                size: 20,
+              },
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              titleFont: { size: 16 },
+              bodyFont: { size: 14 },
+              callbacks: {
+                label: function (context) {
+                  return `$${context.raw.toLocaleString()}`;
+                },
+              },
+            },
+          },
+          scales: {
+            x: {
+              type: 'category',
+              title: {
+                display: true,
+                text: 'Cryptocurrency',
+                color: '#333',
+                font: {
+                  size: 16,
+                },
+              },
+              grid: {
+                display: false,
+              },
+              ticks: {
+                color: '#333',
+              },
+            },
+            y: {
+              beginAtZero: false,
+              title: {
+                display: true,
+                text: 'Price (USD)',
+                color: '#333',
+                font: {
+                  size: 16,
+                },
+              },
+              grid: {
+                color: 'rgba(200, 200, 200, 0.3)',
+              },
+              ticks: {
+                color: '#333',
+              },
+            },
+          },
+        },
+      };
+
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+      }
+
+      const ctx = chartRef.current.getContext('2d');
+      chartInstanceRef.current = new Chart(ctx, chartConfig);
+    } else {
+      // Reset to default chart
+      setData(cryptoData.map((coin) => coin.current_price));
+      setLabels(cryptoData.map((coin) => coin.name));
+    }
   };
 
   const handleChartTypeChange = (e) => {
@@ -153,12 +353,20 @@ const CryptoDashboard = () => {
             <p>Price Change 24h: ${selectedCoin.price_change_24h.toLocaleString()}</p>
             <p>Price Change % 24h: {selectedCoin.price_change_percentage_24h.toFixed(2)}%</p>
           </div>
+          <div className="comparison-window">
+            <h3>Comparison</h3>
+            {cryptoData
+              .filter((coin) => coin.id !== selectedCoin.id)
+              .map((coin) => (
+                <div key={coin.id} className="comparison-item">
+                  <p>{coin.name}: ${coin.current_price.toLocaleString()}</p>
+                </div>
+              ))}
+          </div>
         </div>
       )}
     </div>
   );
-
 };
 
 export default CryptoDashboard;
-
